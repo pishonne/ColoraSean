@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 
-function EasyMode() {
+function Game({ setView }) {
     const [redGuess, setRedGuess] = useState(Math.floor(Math.random()*255))
     const [greenGuess, setGreenGuess] = useState(Math.floor(Math.random()*255))
     const [blueGuess, setBlueGuess] = useState(Math.floor(Math.random()*255))
@@ -159,6 +159,8 @@ function EasyMode() {
                 <section id="color_box">
                     <h1>Final score: {total}</h1>
                     <h1>Rank: {getTotal()}</h1>
+
+                    <button className='start_button' onClick={() => setView("home")}>BACK TO MENU</button>
                 </section>
             </>
         )
@@ -189,4 +191,4 @@ function EasyMode() {
     )
 }
 
-export default EasyMode
+export default Game

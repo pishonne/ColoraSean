@@ -1,8 +1,7 @@
 import { useState } from 'react'
 
 import Home from './Home'
-import EasyMode from './EasyMode'
-import HardMode from './HardMode'
+import Game from './Game'
 
 
 function App() {
@@ -10,9 +9,8 @@ function App() {
 
   return (
     <>
-        {view === "home" && <Home startEasyMode={() => setView("easymode")} startHardMode={() => alert("Coming soon")}/>}
-        {view === "easymode" && <EasyMode />}
-        {view === "hardmode" && <HardMode />}
+        {view === "home" && <Home startGame={() => setView("game")}/>}
+        {view === "game" && <Game setView={setView}/>}
     </>
   )
 }

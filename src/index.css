@@ -115,7 +115,13 @@ section {
   border: solid #08060d 2px;
   border-radius: 15px;
   color: #08060d;
+  box-shadow: 0px 2px #7b7f86;
+  transition: 0.2s ease;
+}
 
+.start_button:active {
+  box-shadow: 0px 1px black;
+  transform: translateY(3px);
 }
 
 .sliders_container {

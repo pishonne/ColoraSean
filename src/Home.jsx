@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function Home({ startEasyMode, startHardMode }) {
+function Home({ startGame }) {
     const [red, setRed] = useState(Math.floor(Math.random()*255))
     const [green, setGreen] = useState(Math.floor(Math.random()*255))
     const [blue, setBlue] = useState(Math.floor(Math.random()*255))
@@ -21,8 +21,7 @@ function Home({ startEasyMode, startHardMode }) {
                 
 
                 <div id="select_mode">
-                    <button className="start_button" style={{backgroundColor: `rgb(${red}, ${green}, ${blue})`}} onClick={startEasyMode}>Easy Mode</button>
-                    <button className="start_button" style={{backgroundColor: `rgb(${red}, ${green}, ${blue})`}} onClick={startHardMode}>Hard Mode</button>
+                    <button className="start_button" style={{backgroundColor: `rgb(${red}, ${green}, ${blue})`}} onClick={startGame}>START GAME</button>
                 </div>
             
 
