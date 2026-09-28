@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-
+import "./Game.css";
+import { supabase } from './supabaseClient';
+import Leaderboard from './Leaderboard';
 
 function Game({ setView }) {
     const [redGuess, setRedGuess] = useState(Math.floor(Math.random()*255))
@@ -28,6 +30,47 @@ function Game({ setView }) {
     const [total, setTotal] = useState(0)
 
     const [buttonText, setButtonText] = useState("Next Round")
+
+    // Supabase elements and methods
+    const leaderboardLen = 15;
+    const [topScores, setTopScores] = useState([]);
+    const [playerName, setPlayerName] = useState("");
+    const [submitted, setSubmitted] = useState(false);
+
+    const fetchLeaderboard = async () => {
+        const {data, error} = await supabase
+        .from("leaderboard")
+        .select("id, player_name, score")
+        .order("score")
+        .limit(10);
+
+        if(!error) {
+            setTopScores(data);
+        }
+    };   
+
+    useEffect(() => {
+        fetchLeaderboard();
+    }, []);
+
+    // Check if current score qualifies for Top 10
+    const isTop10 = topScores.length < leaderboardLen || currentScore > (topScores[topScores.length - 1]?.score || 0);
+
+    const handleSubmitScore = async (e) => {
+        e.preventDefault();
+        if (!playerName.trim()) return;
+
+        const {error} = await supabase
+        .from("leaderboard")
+        .insert([{player_name: playerName, score: total}]);
+
+        if(!error) {
+            setSubmitted(true);
+        }
+    };
+
+    //------------------------------------------------------------------------------------------------------------------------------
+    // Game methods
 
     useEffect(() => {
         if (phase !== "intro") return
@@ -160,7 +203,31 @@ function Game({ setView }) {
                     <h1>Final score: {total}</h1>
                     <h1>Rank: {getTotal()}</h1>
 
-                    <button className='start_button' onClick={() => setView("home")}>BACK TO MENU</button>
+                    <br/>
+
+                    {isTop10 && !submitted && (
+                        <form onSubmit={handleSubmitScore}>
+                        <p> Top {leaderboardLen} Score! 🎉 Enter your name:</p>
+                        <input
+                            className="player_submit_input_field"
+                            type="text"
+                            maxLength={15}
+                            value={playerName}
+                            onChange={(e) => setPlayerName(e.target.value)}
+                            placeholder="Your Name"
+                            required
+                        />
+                        <button style={{marginLeft: 5}} className="submit_button" type="submit">Submit Score</button>
+                        </form>
+                    )}
+
+                    <br/>
+
+                    {submitted && (
+                        <button className="select_button" onClick={setView("leaderboard")}>CHECK LEADERBOARD</button>
+                    )}
+
+                    <button className='select_button' onClick={() => setView("home")}>BACK TO MENU</button>
                 </section>
             </>
         )

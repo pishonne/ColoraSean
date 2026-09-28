@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import "./Home.css";
 
-function Home({ startGame }) {
+function Home({ startGame, seeLeaderboard }) {
     const [red, setRed] = useState(Math.floor(Math.random()*255))
     const [green, setGreen] = useState(Math.floor(Math.random()*255))
     const [blue, setBlue] = useState(Math.floor(Math.random()*255))
@@ -17,11 +18,19 @@ function Home({ startGame }) {
                     You will be given 5 seconds to memorize the background color. Then it will be your job to replicate to the best of your
                     abilities the color using the correct mix of <span style={{color: "rgb(255, 0, 0)"}}>red</span>, <span style={{color: "rgb(0, 255, 0)"}}>green</span>, and <span style={{color: "rgb(0, 0, 255)"}}>blue</span>. Good luck!
                     </p>
+
+                    <br/>
+
+                    <p>Want to view the top 10 scores of this week? Check them out down here!</p>
+
+                    <br/>
+                    
+                    <button className="select_button" onClick={seeLeaderboard}>WEEKLY LEADERBOARD</button>
                 </section>
                 
 
                 <div id="select_mode">
-                    <button className="start_button" style={{backgroundColor: `rgb(${red}, ${green}, ${blue})`}} onClick={startGame}>START GAME</button>
+                    <button className="select_button" style={{backgroundColor: `rgb(${red}, ${green}, ${blue})`}} onClick={startGame}>START GAME</button>
                 </div>
             
 
