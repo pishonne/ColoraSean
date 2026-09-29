@@ -5,6 +5,7 @@ import "./Leaderboard.css";
 function Leaderboard({ backToMenu }) {
 
     const [topScores, setTopScores] = useState([]);
+    const [leaderboardText, setLeaderboardText] = useState("");
 
     const fetchLeaderboard = async () => {
         const {data, error} = await supabase
@@ -15,6 +16,9 @@ function Leaderboard({ backToMenu }) {
 
         if(!error) {
             setTopScores(data);
+            setLeaderboardText("There are no scores yet! Play a game and upload the first score of the week!");
+        } else {
+            setLeaderboardText("Error loading leaderboard. Try refreshing the page.");
         }
     }
 
@@ -28,15 +32,16 @@ function Leaderboard({ backToMenu }) {
 
             <div id="leaderboard_container">
                 <div id="rank_container">
-                    <h3>RANK</h3>
+                    <h3 className="leaderboard_attribute">RANK</h3>
                     <ul>
                         {Array.from({ length: topScores.length }, (_, index) => (
-                            <li className="leaderboard_rank" key={index}>{index + 1}</li>
+                            <li className="leaderboard_rank" key={index}>{index + 1}ᵒ</li>
                         ))}
                     </ul>   
                 </div>
                 <div id="player_name_container">
-                    <h3>PLAYER</h3>
+                    <h3 className="leaderboard_attribute">PLAYER</h3>
+                    
                     <ul>
                         {topScores.map((entry, index) => (
                         <li className="leaderboard_rank" key={index}>
@@ -46,7 +51,7 @@ function Leaderboard({ backToMenu }) {
                     </ul> 
                 </div>
                 <div id="score_container">
-                    <h3>SCORE</h3>
+                    <h3 className="leaderboard_attribute">SCORE</h3>
                     <ul>
                         {topScores.map((entry, index) => (
                         <li className="leaderboard_rank" key={index}>
@@ -55,11 +60,9 @@ function Leaderboard({ backToMenu }) {
                         ))}
                     </ul> 
                 </div>
-                
-
             </div>
 
-            
+            {topScores.length == 0 && <p className="leaderboard_information">{leaderboardText}</p>}
 
             <button className="select_button" onClick={backToMenu}>BACK TO MENU</button>
         </>

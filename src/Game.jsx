@@ -150,15 +150,15 @@ function Game({ setView }) {
     }, [round])
 
     const getTotal = () => {
-        if(total < 200) return "SSS"
-        else if(total < 300) return "SS"
-        else if(total < 400) return "S"
-        else if(total < 500) return "A"
-        else if(total < 600) return "B"
-        else if(total < 700) return "C"
-        else if(total < 800) return "D"
-        else if(total < 900) return "E"
-        return "F"
+        if(total < 200) return "SSS 🏆"
+        else if(total < 300) return "SS 👑"
+        else if(total < 400) return "S 🚀"
+        else if(total < 500) return "A 🥳"
+        else if(total < 600) return "B 😁"
+        else if(total < 700) return "C 🙂"
+        else if(total < 800) return "D 😐"
+        else if(total < 900) return "E 🫪"
+        return "F ☹️"
     }
 
 
@@ -200,7 +200,7 @@ function Game({ setView }) {
         return (
             <>
                 <section id="color_box">
-                    <h1>Final score: {total}</h1>
+                    <h1>✏️ Final score: {total}</h1>
                     <h1>Rank: {getTotal()}</h1>
 
                     <br/>
@@ -224,7 +224,7 @@ function Game({ setView }) {
                     <br/>
 
                     {submitted && (
-                        <button className="select_button" onClick={setView("leaderboard")}>CHECK LEADERBOARD</button>
+                        <button className="select_button" onClick={() => setView("leaderboard")}>VIEW LEADERBOARD</button>
                     )}
 
                     <button className='select_button' onClick={() => setView("home")}>BACK TO MENU</button>

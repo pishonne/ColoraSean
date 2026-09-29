@@ -15,13 +15,13 @@ function Home({ startGame, seeLeaderboard }) {
                     <h1>ColoraSean</h1>
                     <p>Are you good at replicating colours using RGB? This game will test your skills!</p>
                     <p>
-                    You will be given 5 seconds to memorize the background color. Then it will be your job to replicate to the best of your
-                    abilities the color using the correct mix of <span style={{color: "rgb(255, 0, 0)"}}>red</span>, <span style={{color: "rgb(0, 255, 0)"}}>green</span>, and <span style={{color: "rgb(0, 0, 255)"}}>blue</span>. Good luck!
+                    You will be given 5 seconds to memorize the background color. Then it will be your job to recreate it to the best of your
+                    abilities, using the correct mix of <span style={{color: "rgb(255, 0, 0)"}}>red</span>, <span style={{color: "rgb(0, 255, 0)"}}>green</span>, and <span style={{color: "rgb(0, 0, 255)"}}>blue</span>. Good luck!
                     </p>
 
                     <br/>
 
-                    <p>Want to view the top 10 scores of this week? Check them out down here!</p>
+                    <p>🏆 Want to view the top 15 scores of this week? Check them out down here!</p>
 
                     <br/>
                     
