@@ -1,41 +1,41 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import "./Game.css";
 import { supabase } from './supabaseClient';
-import Leaderboard from './Leaderboard';
 
 function Game({ setView }) {
-    const [redGuess, setRedGuess] = useState(Math.floor(Math.random()*255))
-    const [greenGuess, setGreenGuess] = useState(Math.floor(Math.random()*255))
-    const [blueGuess, setBlueGuess] = useState(Math.floor(Math.random()*255))
+    const [redGuess, setRedGuess] = useState(Math.floor(Math.random()*255));
+    const [greenGuess, setGreenGuess] = useState(Math.floor(Math.random()*255));
+    const [blueGuess, setBlueGuess] = useState(Math.floor(Math.random()*255));
 
-    const [redQuestion, setRedQuestion] = useState(Math.floor(Math.random()*255))
-    const [greenQuestion, setGreenQuestion] = useState(Math.floor(Math.random()*255))
-    const [blueQuestion, setBlueQuestion] = useState(Math.floor(Math.random()*255))
+    const [redQuestion, setRedQuestion] = useState(Math.floor(Math.random()*255));
+    const [greenQuestion, setGreenQuestion] = useState(Math.floor(Math.random()*255));
+    const [blueQuestion, setBlueQuestion] = useState(Math.floor(Math.random()*255));
     
-    const [redGuessResult, setRedGuessResult] = useState(0)
-    const [greenGuessResult, setGreenGuessResult] = useState(0)
-    const [blueGuessResult, setBlueGuessResult] = useState(0)
+    const [redGuessResult, setRedGuessResult] = useState(0);
+    const [greenGuessResult, setGreenGuessResult] = useState(0);
+    const [blueGuessResult, setBlueGuessResult] = useState(0);
 
-    const [redQuestionResult, setRedQuestionResult] = useState(0)
-    const [greenQuestionResult, setGreenQuestionResult] = useState(0)
-    const [blueQuestionResult, setBlueQuestionResult] = useState(0)
+    const [redQuestionResult, setRedQuestionResult] = useState(0);
+    const [greenQuestionResult, setGreenQuestionResult] = useState(0);
+    const [blueQuestionResult, setBlueQuestionResult] = useState(0);
 
-    const [textColor, setTextColor] = useState("white")
+    const [textColor, setTextColor] = useState("white");
 
-    const [phase, setPhase] = useState("intro")
-    const [timeLeft, setTimeLeft] = useState(5)
-    const [round, setRound] = useState(1)
+    const [phase, setPhase] = useState("intro");
+    const [timeLeft, setTimeLeft] = useState(5);
+    const [round, setRound] = useState(1);
 
-    const [score, setScore] = useState(0)
-    const [total, setTotal] = useState(0)
+    const [score, setScore] = useState(0);
+    const [total, setTotal] = useState(0);
 
-    const [buttonText, setButtonText] = useState("Next Round")
+    const [buttonText, setButtonText] = useState("Next Round");
 
     // Supabase elements and methods
     const leaderboardLen = 15;
     const [topScores, setTopScores] = useState([]);
     const [playerName, setPlayerName] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [submittedText, setSubmittedText] = useState("");
 
     const fetchLeaderboard = async () => {
         const {data, error} = await supabase
@@ -66,6 +66,9 @@ function Game({ setView }) {
 
         if(!error) {
             setSubmitted(true);
+            setSubmittedText("Your score is now on the leaderboard!");
+        } else {
+            setSubmittedText("Error submitting the score");
         }
     };
 
@@ -73,93 +76,93 @@ function Game({ setView }) {
     // Game methods
 
     useEffect(() => {
-        if (phase !== "intro") return
-        const id = setTimeout(() => setPhase("memorize"), 3000)
-        return () => clearTimeout(id)
-    }, [phase])
+        if (phase !== "intro") return;
+        const id = setTimeout(() => setPhase("memorize"), 3000);
+        return () => clearTimeout(id);
+    }, [phase]);
 
     useEffect(() => {
-        if (phase != "memorize") return        
+        if (phase != "memorize") return   ;     
         if (timeLeft === 0) {
-            setPhase("guess")
+            setPhase("guess");
             return
         }
-        const id = setTimeout(() => setTimeLeft(t => t - 1), 1000)
-        return () => clearTimeout(id)    
-    }, [phase, timeLeft])
+        const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+        return () => clearTimeout(id);
+    }, [phase, timeLeft]);
 
     const getResult = () => {
-        const newScore = Math.abs(redGuess - redQuestion) + Math.abs(greenGuess - greenQuestion) + Math.abs(blueGuess - blueQuestion)
-        setScore(newScore)
-        setTotal(tot => tot + newScore)
-        setPhase("result")
-    }
+        const newScore = Math.abs(redGuess - redQuestion) + Math.abs(greenGuess - greenQuestion) + Math.abs(blueGuess - blueQuestion);
+        setScore(newScore);
+        setTotal(tot => tot + newScore);
+        setPhase("result");
+    };
 
     useEffect(() => {
-        if (phase !== "result") return
+        if (phase !== "result") return;
         const id1 = setTimeout(() => {
-            setRedGuessResult(redGuess)
-            setGreenGuessResult(greenGuess)
-            setBlueGuessResult(blueGuess)
-        }, 500)
+            setRedGuessResult(redGuess);
+            setGreenGuessResult(greenGuess);
+            setBlueGuessResult(blueGuess);
+        }, 500);
         const id2 = setTimeout(() => {
-            setRedQuestionResult(redQuestion)
-            setGreenQuestionResult(greenQuestion)
-            setBlueQuestionResult(blueQuestion)
-        }, 1500)
-        return () => { clearTimeout(id1); clearTimeout(id2) }
-    }, [phase])
+            setRedQuestionResult(redQuestion);
+            setGreenQuestionResult(greenQuestion);
+            setBlueQuestionResult(blueQuestion);
+        }, 1500);
+        return () => { clearTimeout(id1); clearTimeout(id2) };
+    }, [phase]);
 
 
     useEffect(() => {
         if (phase === "intro" || phase === "memorize") {
             if(redQuestion + greenQuestion + blueQuestion < 500) 
-                setTextColor("white")
+                setTextColor("white");
             else
-                setTextColor("black")
+                setTextColor("black");
         }
 
         if (phase === "guess") {
             if(redGuess + greenGuess + blueGuess < 500) 
-                setTextColor("white")
+                setTextColor("white");
             else
-                setTextColor("black")
+                setTextColor("black");
         }
-    }, [redGuess, greenGuess, blueGuess, redQuestion, greenQuestion, blueQuestion])
+    }, [redGuess, greenGuess, blueGuess, redQuestion, greenQuestion, blueQuestion]);
 
     useEffect(() => {
         if(round > 5) {
-            setPhase("final_result")
+            setPhase("final_result");
         } else {         
-            if(round == 5) setButtonText("Final Result") 
-            setRedGuess(Math.floor(Math.random()*255))
-            setGreenGuess(Math.floor(Math.random()*255))
-            setBlueGuess(Math.floor(Math.random()*255))
-            setRedQuestion(Math.floor(Math.random()*255))
-            setGreenQuestion(Math.floor(Math.random()*255))
-            setBlueQuestion(Math.floor(Math.random()*255))
-            setRedGuessResult(0)
-            setGreenGuessResult(0)
-            setBlueGuessResult(0)
-            setRedQuestionResult(0)
-            setGreenQuestionResult(0)
-            setBlueQuestionResult(0)
-            setTimeLeft(5)
-            setPhase("intro")    
+            if(round == 5) setButtonText("Final Result");
+            setRedGuess(Math.floor(Math.random()*255));
+            setGreenGuess(Math.floor(Math.random()*255));
+            setBlueGuess(Math.floor(Math.random()*255));
+            setRedQuestion(Math.floor(Math.random()*255));
+            setGreenQuestion(Math.floor(Math.random()*255));
+            setBlueQuestion(Math.floor(Math.random()*255));
+            setRedGuessResult(0);
+            setGreenGuessResult(0);
+            setBlueGuessResult(0);
+            setRedQuestionResult(0);
+            setGreenQuestionResult(0);
+            setBlueQuestionResult(0);
+            setTimeLeft(5);
+            setPhase("intro");
         }
-    }, [round])
+    }, [round]);
 
     const getTotal = () => {
-        if(total < 200) return "SSS 🏆"
-        else if(total < 300) return "SS 👑"
-        else if(total < 400) return "S 🚀"
-        else if(total < 500) return "A 🥳"
-        else if(total < 600) return "B 😁"
-        else if(total < 700) return "C 🙂"
-        else if(total < 800) return "D 😐"
-        else if(total < 900) return "E 🫪"
-        return "F ☹️"
-    }
+        if(total < 200) return "SSS 🏆";
+        else if(total < 300) return "SS 👑";
+        else if(total < 400) return "S 🚀";
+        else if(total < 500) return "A 🥳";
+        else if(total < 600) return "B 😁";
+        else if(total < 700) return "C 🙂";
+        else if(total < 800) return "D 😐";
+        else if(total < 900) return "E 🫪";
+        return "F ☹️";
+    };
 
 
     if (phase === "intro") {
@@ -223,6 +226,10 @@ function Game({ setView }) {
 
                     <br/>
 
+                    {submittedText !== "" && (
+                        <p>{submittedText}</p>
+                    )}
+
                     {submitted && (
                         <button className="select_button" onClick={() => setView("leaderboard")}>VIEW LEADERBOARD</button>
                     )}
@@ -239,16 +246,13 @@ function Game({ setView }) {
             <section id="color_box" style={{backgroundColor: `rgb(${redGuess}, ${greenGuess}, ${blueGuess})`}}>
                 <div className="sliders_container">
                     <div className="slider_container">
-                        <h3 style={{color: "rgb(255, 0, 0)"}}>R</h3>
                         <input type="range" min="0" max="255" value={redGuess} className="slider" id="redAmount" onChange={(e) => setRedGuess(Number(e.target.value))}/>
                     </div>
                     <div className="slider_container">
-                        <h3 style={{color: "rgb(0, 255, 0)"}}>G</h3>
-                        <input type="range" min="0" max="255" value={greenGuess} className="slider" id="redAmount" onChange={(e) => setGreenGuess(Number(e.target.value))}/>
+                        <input type="range" min="0" max="255" value={greenGuess} className="slider" id="greenAmount" onChange={(e) => setGreenGuess(Number(e.target.value))}/>
                     </div>
                     <div className="slider_container">
-                        <h3 style={{color: "rgb(0, 0, 255)"}}>B</h3>
-                        <input type="range" min="0" max="255" value={blueGuess} className="slider" id="redAmount" onChange={(e) => setBlueGuess(Number(e.target.value))}/>
+                        <input type="range" min="0" max="255" value={blueGuess} className="slider" id="blueAmount" onChange={(e) => setBlueGuess(Number(e.target.value))}/>
                     </div>
                 </div> 
 
@@ -258,4 +262,4 @@ function Game({ setView }) {
     )
 }
 
-export default Game
+export default Game;
