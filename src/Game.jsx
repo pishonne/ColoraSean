@@ -3,6 +3,8 @@ import "./Game.css";
 import { supabase } from './supabaseClient';
 
 function Game({ setView }) {
+
+    // Color variables
     const [redGuess, setRedGuess] = useState(Math.floor(Math.random()*255));
     const [greenGuess, setGreenGuess] = useState(Math.floor(Math.random()*255));
     const [blueGuess, setBlueGuess] = useState(Math.floor(Math.random()*255));
@@ -21,6 +23,7 @@ function Game({ setView }) {
 
     const [textColor, setTextColor] = useState("white");
 
+    // Game variables
     const [phase, setPhase] = useState("intro");
     const [timeLeft, setTimeLeft] = useState(5);
     const [round, setRound] = useState(1);
@@ -30,19 +33,24 @@ function Game({ setView }) {
 
     const [buttonText, setButtonText] = useState("Next Round");
 
-    // Supabase elements and methods
+    // database variables
     const leaderboardLen = 15;
     const [topScores, setTopScores] = useState([]);
     const [playerName, setPlayerName] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [submittedText, setSubmittedText] = useState("");
 
+    
+    //------------------------------------------------------------------------------------------------------------------------------
+    // Supabase methods
+
+    // When the component is rendered, the leaderboard data is fetched, so we can compare with the player's score after the game
     const fetchLeaderboard = async () => {
         const {data, error} = await supabase
         .from("leaderboard")
         .select("id, player_name, score")
         .order("score")
-        .limit(10);
+        .limit(15);
 
         if(!error) {
             setTopScores(data);
@@ -53,9 +61,10 @@ function Game({ setView }) {
         fetchLeaderboard();
     }, []);
 
-    // Check if current score qualifies for Top 10
+    // function to check if current score qualifies for Top 10
     const isTop10 = topScores.length < leaderboardLen || currentScore > (topScores[topScores.length - 1]?.score || 0);
 
+    // method to submit a score to the leaderboard if it qualifies for the top 15 
     const handleSubmitScore = async (e) => {
         e.preventDefault();
         if (!playerName.trim()) return;
@@ -75,22 +84,25 @@ function Game({ setView }) {
     //------------------------------------------------------------------------------------------------------------------------------
     // Game methods
 
+    // when in the "intro" phase, start a three second timer, so the player can view the message
     useEffect(() => {
         if (phase !== "intro") return;
         const id = setTimeout(() => setPhase("memorize"), 3000);
         return () => clearTimeout(id);
     }, [phase]);
 
+    // when in the "memorize" phase, a 5 seconds timer is started, during which the player needs to memorize the displayed color
     useEffect(() => {
-        if (phase != "memorize") return   ;     
+        if (phase != "memorize") return;     
         if (timeLeft === 0) {
             setPhase("guess");
-            return
+            return;
         }
         const id = setTimeout(() => setTimeLeft(t => t - 1), 1000);
         return () => clearTimeout(id);
     }, [phase, timeLeft]);
 
+    // when the guess is submitted, the score is calculated and the phase is changed to "result"
     const getResult = () => {
         const newScore = Math.abs(redGuess - redQuestion) + Math.abs(greenGuess - greenQuestion) + Math.abs(blueGuess - blueQuestion);
         setScore(newScore);
@@ -98,6 +110,7 @@ function Game({ setView }) {
         setPhase("result");
     };
 
+    // when in the "result" phase, both the initial color and the guessed one are displayed, showing the user the score
     useEffect(() => {
         if (phase !== "result") return;
         const id1 = setTimeout(() => {
@@ -113,23 +126,24 @@ function Game({ setView }) {
         return () => { clearTimeout(id1); clearTimeout(id2) };
     }, [phase]);
 
-
+    // when the color values change, the text color is changed to be visible with the background
     useEffect(() => {
         if (phase === "intro" || phase === "memorize") {
-            if(redQuestion + greenQuestion + blueQuestion < 500) 
+            if(redQuestion + greenQuestion + blueQuestion < 400) 
                 setTextColor("white");
             else
                 setTextColor("black");
         }
 
         if (phase === "guess") {
-            if(redGuess + greenGuess + blueGuess < 500) 
+            if(redGuess + greenGuess + blueGuess < 400) 
                 setTextColor("white");
             else
                 setTextColor("black");
         }
     }, [redGuess, greenGuess, blueGuess, redQuestion, greenQuestion, blueQuestion]);
 
+    // when a new round starts, all the necessary values are reset. If round = 6, then we can display the final results
     useEffect(() => {
         if(round > 5) {
             setPhase("final_result");
@@ -152,6 +166,7 @@ function Game({ setView }) {
         }
     }, [round]);
 
+    // method that calculated the final rank based on the total score
     const getTotal = () => {
         if(total < 200) return "SSS 🏆";
         else if(total < 300) return "SS 👑";

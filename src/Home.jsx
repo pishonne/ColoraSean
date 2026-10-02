@@ -2,6 +2,8 @@ import { useState } from 'react'
 import "./Home.css";
 
 function Home({ startGame, seeLeaderboard }) {
+    
+    // When the component is rendered, the colors are initialized to a value between 123 and 255
     const [red, setRed] = useState(Math.floor(Math.random()*122)+123);
     const [green, setGreen] = useState(Math.floor(Math.random()*122)+123);
     const [blue, setBlue] = useState(Math.floor(Math.random()*122)+123);

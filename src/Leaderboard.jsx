@@ -4,25 +4,29 @@ import "./Leaderboard.css";
 
 function Leaderboard({ backToMenu }) {
 
-    const [topScores, setTopScores] = useState([]);
+    const [topScores, setTopScores] = useState([]); // array containing the fetched data
     const [leaderboardText, setLeaderboardText] = useState("Loading leaderboard...");
 
+    // function to fetch leaderboard data from supabase
     const fetchLeaderboard = async () => {
         const {data, error} = await supabase
         .from('leaderboard')
         .select('player_name, score')
         .order('score')
-        .limit(10);
+        .limit(15);
 
+        // if there weren't any issues with the fetching, then the data is put in the topScores array and leaderboardText is changed
         if(!error) {
             setTopScores(data);
             setLeaderboardText(data.length == 0 ? "There are no scores yet! Play a game and upload the first score of the week!" : "");
-            
+        
+        // otherwise, an error message is displayed
         } else {
             setLeaderboardText("Error loading leaderboard. Try refreshing the page.");
         }
-    }
+    };
 
+    // when the component renders, the leaderboard data is fetched
     useEffect(() => {
         fetchLeaderboard();
     }, []);

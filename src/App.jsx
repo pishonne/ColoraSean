@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
-import Home from './Home'
-import Game from './Game'
+import Home from './Home';
+import Game from './Game';
 import Leaderboard from './Leaderboard';
 
 
