@@ -5,7 +5,7 @@ import "./Leaderboard.css";
 function Leaderboard({ backToMenu }) {
 
     const [topScores, setTopScores] = useState([]);
-    const [leaderboardText, setLeaderboardText] = useState("");
+    const [leaderboardText, setLeaderboardText] = useState("Loading leaderboard...");
 
     const fetchLeaderboard = async () => {
         const {data, error} = await supabase
@@ -16,7 +16,8 @@ function Leaderboard({ backToMenu }) {
 
         if(!error) {
             setTopScores(data);
-            setLeaderboardText("There are no scores yet! Play a game and upload the first score of the week!");
+            setLeaderboardText(data.length == 0 ? "There are no scores yet! Play a game and upload the first score of the week!" : "");
+            
         } else {
             setLeaderboardText("Error loading leaderboard. Try refreshing the page.");
         }
@@ -62,7 +63,7 @@ function Leaderboard({ backToMenu }) {
                     </div>
                 </div>
 
-                {topScores.length == 0 && <p className="leaderboard_information">{leaderboardText}</p>}
+                <p className="leaderboard_information">{leaderboardText}</p>
 
                 <button className="select_button" onClick={backToMenu}>BACK TO MENU</button>
             </section>
